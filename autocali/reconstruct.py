@@ -3,9 +3,8 @@ from scipy.optimize import minimize, NonlinearConstraint
 
 
 
-# TODO: Fix transformation of a vector into a upper tringular matrix
 def transform_into_matrix(upper_tri):
-    # Turn the array consisting of the upper tringular part of Q into a 3x3 matrix.
+    # Turn the array consisting of the upper tringular part of Q into a 4x4 matrix.
     Q = np.zeros((4,4))
     inds = np.triu_indices(len(Q))
     Q[inds] = upper_tri
