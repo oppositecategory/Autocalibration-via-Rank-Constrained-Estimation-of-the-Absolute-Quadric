@@ -3,9 +3,6 @@ from scipy.optimize import minimize, NonlinearConstraint
 
 
 
-def linearize_  
-
-
 # TODO: Fix transformation of a vector into a upper tringular matrix
 def transform_into_matrix(upper_tri):
     # Turn the array consisting of the upper tringular part of Q into a 3x3 matrix.
