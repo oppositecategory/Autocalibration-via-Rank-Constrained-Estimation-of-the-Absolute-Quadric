@@ -45,10 +45,7 @@ def matrix_norm(upper_tri):
 
 def minimize_dual_quadric(cameras):
     """ Function estimates Q_infinity given the cameras matrices."""
-    #x0 = np.zeros((1,10))
-    x0 = np.array([[1,0,0,0],
-                   [0,1,0,0],
-                   ])
+    x0 = np.zeros((1,10))
     # Minimize function is set default such that constraint is equal to 0 and ineq means >= 0.
     constarints = ({'type':'eq',   'fun':lambda q: constraint_rank_degenerate(q)},
                    {'type':'eq',   'fun':lambda q: (matrix_norm(q)-1)},
