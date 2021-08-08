@@ -40,23 +40,24 @@ def constraint_minor_det(upper_tri,i):
 def matrix_norm(upper_tri):
     # Return the Frobenius norm of Q
     Q = transform_into_matrix(upper_tri)
-    return np.norm(Q)
+    return np.linalg.norm(Q)
 
 
 def minimize_dual_quadric(cameras):
     """ Function estimates Q_infinity given the cameras matrices."""
     x0 = np.zeros((1,10))
     # Minimize function is set default such that constraint is equal to 0 and ineq means >= 0.
-    constarints = ({'type':'eq',   'fun':lambda q: constraint_rank_degenerate(q)},
-                   {'type':'eq',   'fun':lambda q: (matrix_norm(q)-1)},
+    cons = ({'type':'eq',   'fun':lambda q: constraint_rank_degenerate(q)},
+            {'type':'eq',   'fun':lambda q: (matrix_norm(q)-1)},
 
-                    # Constraints on the principal minors of the matrix to guarantee positive-definite.
-                    {'type':'ineq', 'fun':lambda q: constraint_minor_det(q, 1)},
-                    {'type':'ineq', 'fun':lambda q: constraint_minor_det(q, 2)},
-                    {'type':'ineq', 'fun':lambda q: constraint_minor_det(q, 3)},
-                    {'type':'ineq', 'fun':lambda q: constraint_minor_det(q, 4)})
-    f = lambda q: objective_function(q, cameras)
-    res = minimize(f,x0,method = 'Nelder-Mead')
+            # Constraints on the principal minors of the matrix to guarantee positive-definite.
+            {'type':'ineq', 'fun':lambda q: constraint_minor_det(q, 1)},
+            {'type':'ineq', 'fun':lambda q: constraint_minor_det(q, 2)},
+            {'type':'ineq', 'fun':lambda q: constraint_minor_det(q, 3)},
+            {'type':'ineq', 'fun':lambda q: constraint_minor_det(q, 4)})
+    l = 10 
+    f = lambda q: objective_function(q, cameras) + l*matrix_norm(q)
+    res = minimize(f,x0,method = 'Nelder-Mead',constraints=cons)
     
     if res.success:
         Q = transform_into_matrix(res.x)
